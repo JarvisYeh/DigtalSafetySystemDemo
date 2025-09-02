@@ -218,7 +218,7 @@ function IdentificationMethodSettings() {
           ) : (
             <Alert
               message="方法不一致警告"
-              description="作业危害分析和安全检查分析使用了不同的评价方法，这可能导致系统功能异常。请点击"同步方法"按钮或手动调整为相同方法。"
+              description="作业危害分析和安全检查分析使用了不同的评价方法，这可能导致系统功能异常。请点击同步方法按钮或手动调整为相同方法。"
               type="warning"
               showIcon
               action={

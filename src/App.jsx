@@ -14,6 +14,7 @@ import EnterpriseRiskAnnouncement from './pages/EnterpriseRiskAnnouncement';
 import EvaluationMethodSettings from './pages/EvaluationMethodSettings';
 import MajorHazardRegistry from './pages/MajorHazardRegistry';
 import IdentificationMethodSettings from './pages/IdentificationMethodSettings';
+import BridgeVortexVibration from './pages/BridgeVortexVibration';
 
 const { Content } = Layout;
 
@@ -37,6 +38,7 @@ function App() {
               <Route path="/evaluation-method-settings" element={<EvaluationMethodSettings />} />
               <Route path="/major-hazard-registry" element={<MajorHazardRegistry />} />
               <Route path="/identification-method-settings" element={<IdentificationMethodSettings />} />
+              <Route path="/bridge-vortex-vibration" element={<BridgeVortexVibration />} />
             </Routes>
           </Content>
         </Layout>

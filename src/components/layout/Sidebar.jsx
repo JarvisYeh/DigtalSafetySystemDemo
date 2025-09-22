@@ -84,6 +84,18 @@ function Sidebar() {
         },
       ],
     },
+    {
+      key: 'bridge-management',
+      icon: <SafetyOutlined />,
+      label: '桥梁涡振管理',
+      children: [
+        {
+          key: '/bridge-vortex-vibration',
+          icon: <SafetyOutlined />,
+          label: '桥梁涡振管理',
+        },
+      ],
+    },
   ];
 
   const handleMenuClick = ({ key }) => {

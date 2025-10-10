@@ -4,14 +4,18 @@ import {
   SafetyOutlined, 
   ExclamationCircleOutlined, 
   CheckCircleOutlined,
-  WarningOutlined 
+  WarningOutlined,
+  ThunderboltOutlined,
+  MonitorOutlined,
+  AlertOutlined,
+  CalendarOutlined
 } from '@ant-design/icons';
 import ReactECharts from 'echarts-for-react';
 
 function Dashboard() {
-  const riskDistributionOption = {
+  const bridgeTypeDistributionOption = {
     title: {
-      text: '风险等级分布',
+      text: '桥梁类型分布',
       left: 'center'
     },
     tooltip: {
@@ -23,14 +27,14 @@ function Dashboard() {
     },
     series: [
       {
-        name: '风险等级',
+        name: '桥梁类型',
         type: 'pie',
         radius: '50%',
         data: [
-          { value: 15, name: '重大风险', itemStyle: { color: '#ff4d4f' } },
-          { value: 35, name: '较大风险', itemStyle: { color: '#faad14' } },
-          { value: 120, name: '一般风险', itemStyle: { color: '#52c41a' } },
-          { value: 80, name: '低风险', itemStyle: { color: '#1890ff' } }
+          { value: 8, name: '悬索桥', itemStyle: { color: '#ff4d4f' } },
+          { value: 12, name: '斜拉桥', itemStyle: { color: '#faad14' } },
+          { value: 15, name: '钢结构梁桥', itemStyle: { color: '#52c41a' } },
+          { value: 10, name: '其他桥型', itemStyle: { color: '#1890ff' } }
         ],
         emphasis: {
           itemStyle: {
@@ -43,16 +47,24 @@ function Dashboard() {
     ]
   };
 
-  const trendOption = {
+  const vibrationTrendOption = {
     title: {
-      text: '风险管控趋势',
-      left: 'center'
+      text: '涡振监测趋势',
+      left: 'center',
+      top: 10
     },
     tooltip: {
       trigger: 'axis'
     },
     legend: {
-      data: ['新增风险点', '已管控风险点', '待处理风险点']
+      data: ['隐患排查', '风险评估', '应急事件'],
+      top: 40
+    },
+    grid: {
+      top: 80,
+      left: 60,
+      right: 40,
+      bottom: 60
     },
     xAxis: {
       type: 'category',
@@ -63,22 +75,22 @@ function Dashboard() {
     },
     series: [
       {
-        name: '新增风险点',
+        name: '隐患排查',
         type: 'line',
-        data: [12, 19, 15, 25, 22, 18],
-        itemStyle: { color: '#ff4d4f' }
+        data: [8, 12, 15, 18, 23, 25],
+        itemStyle: { color: '#1890ff' }
       },
       {
-        name: '已管控风险点',
+        name: '风险评估',
         type: 'line',
-        data: [8, 15, 12, 20, 18, 16],
+        data: [6, 10, 12, 15, 18, 20],
         itemStyle: { color: '#52c41a' }
       },
       {
-        name: '待处理风险点',
+        name: '应急事件',
         type: 'line',
-        data: [4, 4, 3, 5, 4, 2],
-        itemStyle: { color: '#faad14' }
+        data: [1, 0, 2, 1, 0, 2],
+        itemStyle: { color: '#ff4d4f' }
       }
     ]
   };
@@ -86,8 +98,8 @@ function Dashboard() {
   return (
     <div className="space-y-6">
       <Alert
-        message="系统提醒"
-        description="当前有 3 个重大风险点需要立即处理，15 个较大风险点需要重点关注。"
+        message="涡振监测提醒"
+        description="当前有 3 座桥梁存在重大涡振隐患，2 起应急事件正在处置中，建议加强监测和管控措施。"
         type="warning"
         showIcon
         className="mb-6"
@@ -97,18 +109,18 @@ function Dashboard() {
         <Col xs={24} sm={12} lg={6}>
           <Card>
             <Statistic
-              title="总风险点数"
-              value={250}
+              title="管辖桥梁总数"
+              value={45}
               prefix={<SafetyOutlined />}
-              valueStyle={{ color: '#3f8600' }}
+              valueStyle={{ color: '#1890ff' }}
             />
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
           <Card>
             <Statistic
-              title="重大风险"
-              value={15}
+              title="高风险桥梁"
+              value={3}
               prefix={<ExclamationCircleOutlined />}
               valueStyle={{ color: '#cf1322' }}
             />
@@ -117,8 +129,41 @@ function Dashboard() {
         <Col xs={24} sm={12} lg={6}>
           <Card>
             <Statistic
-              title="已管控风险"
-              value={200}
+              title="在线监测桥梁"
+              value={32}
+              prefix={<MonitorOutlined />}
+              valueStyle={{ color: '#722ed1' }}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} lg={6}>
+          <Card>
+            <Statistic
+              title="应急事件"
+              value={2}
+              prefix={<AlertOutlined />}
+              valueStyle={{ color: '#faad14' }}
+            />
+          </Card>
+        </Col>
+      </Row>
+
+      <Row gutter={[16, 16]}>
+        <Col xs={24} sm={12} lg={6}>
+          <Card>
+            <Statistic
+              title="抑振装置数量"
+              value={156}
+              prefix={<ThunderboltOutlined />}
+              valueStyle={{ color: '#13c2c2' }}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} lg={6}>
+          <Card>
+            <Statistic
+              title="已完成排查"
+              value={38}
               prefix={<CheckCircleOutlined />}
               valueStyle={{ color: '#3f8600' }}
             />
@@ -127,10 +172,20 @@ function Dashboard() {
         <Col xs={24} sm={12} lg={6}>
           <Card>
             <Statistic
-              title="待处理风险"
-              value={50}
+              title="待执行排查"
+              value={7}
+              prefix={<CalendarOutlined />}
+              valueStyle={{ color: '#fa8c16' }}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} lg={6}>
+          <Card>
+            <Statistic
+              title="专家报告"
+              value={25}
               prefix={<WarningOutlined />}
-              valueStyle={{ color: '#faad14' }}
+              valueStyle={{ color: '#722ed1' }}
             />
           </Card>
         </Col>
@@ -138,42 +193,42 @@ function Dashboard() {
 
       <Row gutter={[16, 16]}>
         <Col xs={24} lg={12}>
-          <Card title="风险管控完成率" className="h-80">
+          <Card title="涡振风险管控完成率" className="h-80">
             <div className="space-y-4">
               <div>
                 <div className="flex justify-between mb-2">
-                  <span>重大风险管控</span>
-                  <span>80%</span>
+                  <span>主梁涡振管控</span>
+                  <span>85%</span>
                 </div>
-                <Progress percent={80} status="active" strokeColor="#ff4d4f" />
+                <Progress percent={85} status="active" strokeColor="#1890ff" />
               </div>
               <div>
                 <div className="flex justify-between mb-2">
-                  <span>较大风险管控</span>
-                  <span>90%</span>
+                  <span>拉索涡振管控</span>
+                  <span>78%</span>
                 </div>
-                <Progress percent={90} status="active" strokeColor="#faad14" />
+                <Progress percent={78} status="active" strokeColor="#faad14" />
               </div>
               <div>
                 <div className="flex justify-between mb-2">
-                  <span>一般风险管控</span>
-                  <span>95%</span>
+                  <span>抑振装置维护</span>
+                  <span>92%</span>
                 </div>
-                <Progress percent={95} status="active" strokeColor="#52c41a" />
+                <Progress percent={92} status="active" strokeColor="#52c41a" />
               </div>
               <div>
                 <div className="flex justify-between mb-2">
-                  <span>低风险管控</span>
-                  <span>98%</span>
+                  <span>监测设备运行</span>
+                  <span>96%</span>
                 </div>
-                <Progress percent={98} status="active" strokeColor="#1890ff" />
+                <Progress percent={96} status="active" strokeColor="#722ed1" />
               </div>
             </div>
           </Card>
         </Col>
         <Col xs={24} lg={12}>
           <Card className="h-80">
-            <ReactECharts option={riskDistributionOption} style={{ height: '240px' }} />
+            <ReactECharts option={bridgeTypeDistributionOption} style={{ height: '240px' }} />
           </Card>
         </Col>
       </Row>
@@ -181,7 +236,7 @@ function Dashboard() {
       <Row gutter={[16, 16]}>
         <Col xs={24}>
           <Card className="h-96">
-            <ReactECharts option={trendOption} style={{ height: '320px' }} />
+            <ReactECharts option={vibrationTrendOption} style={{ height: '300px' }} />
           </Card>
         </Col>
       </Row>

@@ -31,10 +31,10 @@ function Header() {
     <AntHeader className="flex items-center justify-between px-6 bg-[#001529]">
       <div className="flex items-center">
         <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
-          <span className="text-white font-bold text-lg">安</span>
+          <span className="text-white font-bold text-lg">桥</span>
         </div>
-        <Title level={3} className="text-white m-0">
-          安全数智化管理系统
+        <Title level={3} className="text-white m-0" style={{ color: '#ffffff' }}>
+          大跨桥梁涡振风险管控系统
         </Title>
       </div>
       

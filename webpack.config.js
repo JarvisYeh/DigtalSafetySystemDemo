@@ -38,9 +38,14 @@ module.exports = {
     extensions: ['.js', '.jsx']
   },
   devServer: {
-    port: 3456,
+    port: 3000,
     allowedHosts: ['all', '.alibaba-inc.com'],
-    historyApiFallback: true
+    historyApiFallback: {
+      index: '/index.html',
+      rewrites: [
+        { from: /^\/_p\/\d+\//, to: '/index.html' }
+      ]
+    }
   },
   plugins: [
     new HtmlWebpackPlugin({

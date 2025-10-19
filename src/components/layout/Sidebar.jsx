@@ -26,9 +26,19 @@ function Sidebar() {
       label: '系统概览',
     },
     {
-      key: '/hazard-inspection',
+      key: 'hazard-inspection-group',
       icon: <SearchOutlined />,
       label: '隐患排查',
+      children: [
+        {
+          key: '/vortex-inspection-process',
+          label: '涡振隐患排查流程',
+        },
+        {
+          key: '/hazard-inspection',
+          label: '桥梁涡振隐患排查',
+        },
+      ],
     },
     {
       key: '/risk-assessment',
@@ -41,19 +51,9 @@ function Sidebar() {
       label: '应急处置',
     },
     {
-      key: '/monitoring-equipment',
-      icon: <MonitorOutlined />,
-      label: '监测设备',
-    },
-    {
-      key: '/inspection-plan',
-      icon: <CalendarOutlined />,
-      label: '排查计划',
-    },
-    {
       key: '/knowledge-base',
       icon: <BookOutlined />,
-      label: '专家知识库',
+      label: '桥梁资料库',
     },
     {
       key: '/system-settings',

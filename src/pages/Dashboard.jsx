@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, Row, Col, Statistic, Progress, Alert } from 'antd';
 import { 
   SafetyOutlined, 
@@ -10,90 +10,85 @@ import {
   AlertOutlined,
   CalendarOutlined
 } from '@ant-design/icons';
+import * as echarts from 'echarts';
 import ReactECharts from 'echarts-for-react';
+import { useDataContext } from '../context/DataContext';
 
 function Dashboard() {
-  const bridgeTypeDistributionOption = {
-    title: {
-      text: '桥梁类型分布',
-      left: 'center'
-    },
-    tooltip: {
-      trigger: 'item'
-    },
-    legend: {
-      orient: 'vertical',
-      left: 'left'
-    },
-    series: [
-      {
-        name: '桥梁类型',
-        type: 'pie',
-        radius: '50%',
-        data: [
-          { value: 8, name: '悬索桥', itemStyle: { color: '#ff4d4f' } },
-          { value: 12, name: '斜拉桥', itemStyle: { color: '#faad14' } },
-          { value: 15, name: '钢结构梁桥', itemStyle: { color: '#52c41a' } },
-          { value: 10, name: '其他桥型', itemStyle: { color: '#1890ff' } }
-        ],
-        emphasis: {
-          itemStyle: {
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.5)'
-          }
+  const { getStatistics } = useDataContext();
+  const statistics = getStatistics();
+  
+  useEffect(() => {
+    console.log('Dashboard mounted, statistics:', statistics);
+  }, [statistics]);
+
+  const getChartOption = () => {
+    return {
+      title: {
+        text: '桥梁类型分布',
+        left: 'center',
+        top: 20,
+        textStyle: {
+          fontSize: 16,
+          fontWeight: 'bold',
+          color: '#333'
         }
-      }
-    ]
+      },
+      tooltip: {
+        trigger: 'item',
+        formatter: '{b}: {c}座 ({d}%)'
+      },
+      legend: {
+        orient: 'horizontal',
+        bottom: 20,
+        left: 'center',
+        textStyle: {
+          fontSize: 12
+        }
+      },
+      series: [
+        {
+          name: '桥梁类型',
+          type: 'pie',
+          radius: ['40%', '70%'],
+          center: ['50%', '50%'],
+          avoidLabelOverlap: false,
+          itemStyle: {
+            borderRadius: 8,
+            borderColor: '#fff',
+            borderWidth: 2
+          },
+          label: {
+            show: true,
+            position: 'outside',
+            formatter: '{b}\\n{c}座',
+            fontSize: 11,
+            color: '#333'
+          },
+          labelLine: {
+            show: true,
+            length: 15,
+            length2: 10
+          },
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          },
+          data: [
+            { value: 8, name: '悬索桥', itemStyle: { color: '#ff7875' } },
+            { value: 12, name: '斜拉桥', itemStyle: { color: '#ffc069' } },
+            { value: 15, name: '钢结构梁桥', itemStyle: { color: '#95de64' } },
+            { value: 10, name: '其他桥型', itemStyle: { color: '#69c0ff' } }
+          ]
+        }
+      ]
+    };
   };
 
-  const vibrationTrendOption = {
-    title: {
-      text: '涡振监测趋势',
-      left: 'center',
-      top: 10
-    },
-    tooltip: {
-      trigger: 'axis'
-    },
-    legend: {
-      data: ['隐患排查', '风险评估', '应急事件'],
-      top: 40
-    },
-    grid: {
-      top: 80,
-      left: 60,
-      right: 40,
-      bottom: 60
-    },
-    xAxis: {
-      type: 'category',
-      data: ['1月', '2月', '3月', '4月', '5月', '6月']
-    },
-    yAxis: {
-      type: 'value'
-    },
-    series: [
-      {
-        name: '隐患排查',
-        type: 'line',
-        data: [8, 12, 15, 18, 23, 25],
-        itemStyle: { color: '#1890ff' }
-      },
-      {
-        name: '风险评估',
-        type: 'line',
-        data: [6, 10, 12, 15, 18, 20],
-        itemStyle: { color: '#52c41a' }
-      },
-      {
-        name: '应急事件',
-        type: 'line',
-        data: [1, 0, 2, 1, 0, 2],
-        itemStyle: { color: '#ff4d4f' }
-      }
-    ]
-  };
+
 
   return (
     <div className="space-y-6">
@@ -106,137 +101,68 @@ function Dashboard() {
       />
 
       <Row gutter={[16, 16]}>
-        <Col xs={24} sm={12} lg={6}>
+        <Col xs={24} sm={12} lg={6} xl={4}>
           <Card>
             <Statistic
               title="管辖桥梁总数"
-              value={45}
+              value={statistics.totalBridges}
               prefix={<SafetyOutlined />}
               valueStyle={{ color: '#1890ff' }}
             />
           </Card>
         </Col>
-        <Col xs={24} sm={12} lg={6}>
+        <Col xs={24} sm={12} lg={6} xl={5}>
           <Card>
             <Statistic
-              title="高风险桥梁"
-              value={3}
+              title="隐患排查添加桥梁数量"
+              value={statistics.hazardInspectionCount}
               prefix={<ExclamationCircleOutlined />}
               valueStyle={{ color: '#cf1322' }}
             />
           </Card>
         </Col>
-        <Col xs={24} sm={12} lg={6}>
+        <Col xs={24} sm={12} lg={6} xl={5}>
           <Card>
             <Statistic
-              title="在线监测桥梁"
-              value={32}
-              prefix={<MonitorOutlined />}
-              valueStyle={{ color: '#722ed1' }}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} lg={6}>
-          <Card>
-            <Statistic
-              title="应急事件"
-              value={2}
-              prefix={<AlertOutlined />}
+              title="风险评估添加桥梁数量"
+              value={statistics.riskAssessmentCount}
+              prefix={<WarningOutlined />}
               valueStyle={{ color: '#faad14' }}
             />
           </Card>
         </Col>
-      </Row>
-
-      <Row gutter={[16, 16]}>
-        <Col xs={24} sm={12} lg={6}>
+        <Col xs={24} sm={12} lg={6} xl={5}>
           <Card>
             <Statistic
-              title="抑振装置数量"
-              value={156}
-              prefix={<ThunderboltOutlined />}
-              valueStyle={{ color: '#13c2c2' }}
+              title="应急处置添加桥梁数量"
+              value={statistics.emergencyResponseCount}
+              prefix={<AlertOutlined />}
+              valueStyle={{ color: '#ff4d4f' }}
             />
           </Card>
         </Col>
-        <Col xs={24} sm={12} lg={6}>
+        <Col xs={24} sm={12} lg={6} xl={5}>
           <Card>
             <Statistic
-              title="已完成排查"
-              value={38}
+              title="桥梁资料库添加桥梁数量"
+              value={statistics.knowledgeBaseCount}
               prefix={<CheckCircleOutlined />}
-              valueStyle={{ color: '#3f8600' }}
+              valueStyle={{ color: '#52c41a' }}
             />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} lg={6}>
-          <Card>
-            <Statistic
-              title="待执行排查"
-              value={7}
-              prefix={<CalendarOutlined />}
-              valueStyle={{ color: '#fa8c16' }}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} lg={6}>
-          <Card>
-            <Statistic
-              title="专家报告"
-              value={25}
-              prefix={<WarningOutlined />}
-              valueStyle={{ color: '#722ed1' }}
-            />
-          </Card>
-        </Col>
-      </Row>
-
-      <Row gutter={[16, 16]}>
-        <Col xs={24} lg={12}>
-          <Card title="涡振风险管控完成率" className="h-80">
-            <div className="space-y-4">
-              <div>
-                <div className="flex justify-between mb-2">
-                  <span>主梁涡振管控</span>
-                  <span>85%</span>
-                </div>
-                <Progress percent={85} status="active" strokeColor="#1890ff" />
-              </div>
-              <div>
-                <div className="flex justify-between mb-2">
-                  <span>拉索涡振管控</span>
-                  <span>78%</span>
-                </div>
-                <Progress percent={78} status="active" strokeColor="#faad14" />
-              </div>
-              <div>
-                <div className="flex justify-between mb-2">
-                  <span>抑振装置维护</span>
-                  <span>92%</span>
-                </div>
-                <Progress percent={92} status="active" strokeColor="#52c41a" />
-              </div>
-              <div>
-                <div className="flex justify-between mb-2">
-                  <span>监测设备运行</span>
-                  <span>96%</span>
-                </div>
-                <Progress percent={96} status="active" strokeColor="#722ed1" />
-              </div>
-            </div>
-          </Card>
-        </Col>
-        <Col xs={24} lg={12}>
-          <Card className="h-80">
-            <ReactECharts option={bridgeTypeDistributionOption} style={{ height: '240px' }} />
           </Card>
         </Col>
       </Row>
 
       <Row gutter={[16, 16]}>
         <Col xs={24}>
-          <Card className="h-96">
-            <ReactECharts option={vibrationTrendOption} style={{ height: '300px' }} />
+          <Card title="桥梁类型分布统计">
+            <div style={{ width: '100%', height: '400px', minHeight: '400px' }}>
+              <ReactECharts 
+                option={getChartOption()} 
+                style={{ width: '100%', height: '400px' }}
+                opts={{ renderer: 'canvas', width: 'auto', height: 'auto' }}
+              />
+            </div>
           </Card>
         </Col>
       </Row>
